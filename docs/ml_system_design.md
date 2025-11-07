@@ -2,14 +2,14 @@
 
 ## 1. Overview
 
-Operation Sound Sentinel is an AI-driven acoustic surveillance system that detects gunshots and vehicle sounds in protected forests. It combines edge AI devices, cloud processing, and MLOps tools for continuous monitoring, training, and deployment.
+Operation Sound Sentinel is an AI-driven acoustic surveillance system that detects gunshots  in protected forests. It combines edge AI devices, cloud processing, and MLOps tools for continuous monitoring, training, and deployment.
 
 ## 2. Architecture Summary
 
-* **Edge Layer:** Microphones and Raspberry Pi devices capture and preprocess sounds. Audio is converted into Mel-spectrograms and sent to Kafka.
+* **Edge Layer:**pc  Microphones  devices capture and preprocess sounds. Audio is converted into Mel-spectrograms and sent to Kafka.
 * **Data Layer:** Kafka streams audio to cloud storage (S3 or MinIO). Data versioning is handled with DVC.
-* **Model Layer:** Models are trained using PyTorch or TensorFlow. MLflow tracks experiments and parameters.
-* **Serving Layer:** Trained models are deployed via FastAPI or TorchServe. Predictions are logged for monitoring.
+* **Model Layer:** Models are trained using PyTorch . MLflow tracks experiments and parameters.
+* **Serving Layer:** Trained models are deployed via FlaskAPI . Predictions are logged for monitoring.
 * **Monitoring:** Prometheus collects metrics; Grafana visualizes dashboards. Alerts trigger if performance drops.
 
 ## 3. Core Components
@@ -18,7 +18,7 @@ Operation Sound Sentinel is an AI-driven acoustic surveillance system that detec
 * **Feature Extraction:** Librosa, NumPy
 * **Model Training:** PyTorch, Scikit-learn
 * **Model Tracking:** MLflow, DVC
-* **Deployment:** Docker, FastAPI
+* **Deployment:** Docker, FlskAPI
 * **Monitoring:** Prometheus, Grafana
 
 ## 4. Workflow
@@ -33,7 +33,7 @@ Operation Sound Sentinel is an AI-driven acoustic surveillance system that detec
 ## 5. Tools & Environment
 
 * **Languages:** Python
-* **Cloud:** AWS or Local Linux server
+* **Cloud:** AWS and Local Linux server
 * **Version Control:** Git + DVC
 * **Containerization:** Docker
 

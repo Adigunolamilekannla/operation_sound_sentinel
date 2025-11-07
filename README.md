@@ -54,13 +54,13 @@ operation-sound-sentinel/
 │ └── features/ # Mel-spectrograms
 │
 ├── notebooks/
-│ ├── 01_data_preprocessing.ipynb
-│ └── 02_model_training.ipynb
+│ └── reseach_note.ipynb
 │
 ├── src/
-│ ├── data_pipeline/
-│ ├── feature_engineering/
-│ ├── model/
+│ ├── components/
+│ ├── utils/
+│ ├── exception/
+│ ├── logger/
 │ ├── deployment/
 │ └── monitoring/
 │
