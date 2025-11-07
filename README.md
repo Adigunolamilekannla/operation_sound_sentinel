@@ -7,7 +7,7 @@
 ##  Overview
 
 **Operation Sound Sentinel** is a full **end-to-end MLOps project** that listens to the sounds of the jungle through **IoT microphones**.  
-The system uses **machine learning** to detect suspicious sounds — such as **gunshots** or **vehicle noise** — and instantly notifies wildlife rangers.
+The system uses **machine learning** to detect suspicious sounds — such as **gunshots** or **BackGrounds** — and instantly notifies wildlife rangers.
 
 The goal is to **protect animals**, **assist conservation teams**, and demonstrate how **AI + Cloud + Edge computing** can work together to solve real-world problems.
 
@@ -27,7 +27,7 @@ The goal is to **protect animals**, **assist conservation teams**, and demonstra
 
   your system microphone
 ↓
- Kafka Stream (real-time audio)
+ sounddevice  (real-time audio) with pc 
 ↓
  Airflow → ETL → AWS S3
 ↓
