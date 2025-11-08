@@ -30,7 +30,7 @@ class DataIngestion:
         except Exception as e:
             raise CustomException(e, sys)
 
-    def process_raw_data(self, csv_path, ingested_data_path):
+    def ingest_raw_data(self, csv_path, ingested_data_path):
         """
         This function loops through all audio files, renames them sequentially,
         skips empty files, and saves the valid file paths with labels to a CSV file.
@@ -95,8 +95,8 @@ class DataIngestion:
         except Exception as e:
             raise CustomException(e, sys)
 
-    def initiate_process_raw_data(self):
+    def initiate_ingest_raw_data(self):
         logging.info("Starting Data Ingestion")
-        self.process_raw_data(
+        self.ingest_raw_data(
             self.config.ingested_data_csv_path, self.config.ingested_data_path
         )
