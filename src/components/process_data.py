@@ -134,13 +134,14 @@ class ProcessData:
             train_df, test_df = self.process_data(
                 self.config.ingested_data_csv_path, self.config.process_data_path
             )
-
-            X_train, y_train = self.build_all_feat(train_df, self.config.process_data_path)
-            X_test, y_test = self.build_all_feat(test_df, self.config.process_data_path)
+            if not os.path.exists(self.config.train_process_data_path):
+                X_train, y_train = self.build_all_feat(train_df, self.config.process_data_path)
+                X_test, y_test = self.build_all_feat(test_df, self.config.process_data_path)
+                save_object(self.config.train_process_data_path, (X_train, y_train))
+                save_object(self.config.test_process_data_path, (X_test, y_test))
 
            
-            save_object(self.config.train_process_data_path, (X_train, y_train))
-            save_object(self.config.test_process_data_path, (X_test, y_test))
+            
 
             logging.info("Data processing completed successfully")
 
