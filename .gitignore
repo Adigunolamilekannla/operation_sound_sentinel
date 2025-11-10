@@ -2,5 +2,5 @@ data
 logs
 artifacts
 .env
-final_model
+#final_model
 data_from_user
