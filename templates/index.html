@@ -1,0 +1,59 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Operation Sound Sentinel</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: linear-gradient(to bottom, #228B22, #556B2F); color: white; margin: 0; padding: 20px; }
+        .container { max-width: 800px; margin: 0 auto; text-align: center; }
+        h1 { font-size: 2.5em; margin-bottom: 20px; }
+        #live-status { font-size: 1.5em; margin: 20px 0; padding: 10px; background: rgba(0,0,0,0.3); border-radius: 10px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 10px; border: 1px solid #ccc; }
+        th { background: rgba(0,0,0,0.5); }
+        .alert { animation: flash 1s infinite; }
+        @keyframes flash { 0% { background: red; } 50% { background: transparent; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌿 Operation Sound Sentinel</h1>
+        <p>Real-time jungle sound monitoring for wildlife protection.</p>
+        <div id="live-status">Listening... 🎧</div>
+        <h2>Recent Detections</h2>
+        <table id="logs-table">
+            <thead><tr><th>Time</th><th>Detection</th><th>Probability</th></tr></thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <script>
+        function updateLogs() {
+            fetch('/api/logs')
+                .then(res => res.json())
+                .then(data => {
+                    const tbody = document.querySelector('#logs-table tbody');
+                    tbody.innerHTML = '';
+                    data.logs.forEach(log => {
+                        const row = `<tr><td>${log.timestamp}</td><td>${log.emoji} ${log.detection}</td><td>${log.probability}</td></tr>`;
+                        tbody.innerHTML += row;
+                    });
+                    // Update live status with latest
+                    if (data.logs.length > 0) {
+                        const latest = data.logs[0];
+                        const status = document.getElementById('live-status');
+                        status.textContent = `${latest.emoji} ${latest.detection} (Prob: ${latest.probability})`;
+                        if (latest.detection === 'Gunshot') status.classList.add('alert');
+                        else status.classList.remove('alert');
+                    }
+                });
+        }
+
+        // Update every 5 seconds
+        setInterval(updateLogs, 5000);
+        updateLogs();  // Initial load
+    </script>
+</body>
+</html>

@@ -49,48 +49,48 @@ class DataIngestion:
             audio_data, audio_label = [], []
             
             
+            if not os.path.exists(ingested_data_path):
+                count = 1
+                for filepath, label in data_loc_dict.items():
+                    if not os.path.exists(filepath):
+                        raise ValueError(f"No such directory: {filepath}")
 
-            count = 1
-            for filepath, label in data_loc_dict.items():
-                if not os.path.exists(filepath):
-                    raise ValueError(f"No such directory: {filepath}")
+                    for filename in tqdm(os.listdir(filepath), desc=f"Processing {label}"):
+                        if not filename.lower().endswith(".wav"):
+                            continue
 
-                for filename in tqdm(os.listdir(filepath), desc=f"Processing {label}"):
-                    if not filename.lower().endswith(".wav"):
-                        continue
+                        old_file_path = os.path.join(filepath, filename)
+                        new_file_name = f"audio{count}.wav"
+                        new_path = os.path.join(filepath, new_file_name)
 
-                    old_file_path = os.path.join(filepath, filename)
-                    new_file_name = f"audio{count}.wav"
-                    new_path = os.path.join(filepath, new_file_name)
+                        # Safely rename only if not already renamed
+                        if not os.path.exists(new_path):
+                            os.rename(old_file_path, new_path)
 
-                    # Safely rename only if not already renamed
-                    if not os.path.exists(new_path):
-                        os.rename(old_file_path, new_path)
+                        # Load and resample audio
+                        wav, rate = librosa.load(new_path, sr=48000)
 
-                    # Load and resample audio
-                    wav, rate = librosa.load(new_path, sr=48000)
+                        # Skip empty audio
+                        if wav.size == 0 or os.path.getsize(new_path) == 0:
+                            logging.warning(f"Skipping empty file: {new_path}")
+                            continue
 
-                    # Skip empty audio
-                    if wav.size == 0 or os.path.getsize(new_path) == 0:
-                        logging.warning(f"Skipping empty file: {new_path}")
-                        continue
+                        # Save processed audio to artifacts directory
+                        os.makedirs(ingested_data_path, exist_ok=True)
+                        save_file_path = os.path.join(ingested_data_path, new_file_name)
+                        wavfile.write(save_file_path, rate, wav)
 
-                    # Save processed audio to artifacts directory
-                    os.makedirs(ingested_data_path, exist_ok=True)
-                    save_file_path = os.path.join(ingested_data_path, new_file_name)
-                    wavfile.write(save_file_path, rate, wav)
+                        # Store metadata
+                        audio_data.append(save_file_path)
+                        audio_label.append(label)
+                        count += 1
 
-                    # Store metadata
-                    audio_data.append(save_file_path)
-                    audio_label.append(label)
-                    count += 1
+                # Create CSV
+                audio_df = pd.DataFrame({"File_name": audio_data, "Label": audio_label})
+                MakeDirectory(csv_path)
+                audio_df.to_csv(csv_path, index=False)
 
-            # Create CSV
-            audio_df = pd.DataFrame({"File_name": audio_data, "Label": audio_label})
-            MakeDirectory(csv_path)
-            audio_df.to_csv(csv_path, index=False)
-
-            logging.info(f"Data Ingestion Completed. Total files: {len(audio_df)}")
+                logging.info(f"Data Ingestion Completed. Total files: {len(audio_df)}")
 
         except Exception as e:
             raise CustomException(e, sys)

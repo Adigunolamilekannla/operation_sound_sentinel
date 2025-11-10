@@ -1,4 +1,6 @@
 data
 logs
 artifacts
-
+.env
+final_model
+data_from_user

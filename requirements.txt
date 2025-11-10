@@ -1,0 +1,19 @@
+# Core Python dependencies
+numpy
+pandas
+tqdm
+scipy
+psutil
+python-dotenv
+librosa
+python-speech-features
+soundfile
+scikit-learn
+torch
+torchvision
+torchaudio
+mlflow
+dataclasses
+pickle-mixin
+flask
+python-dotenv
