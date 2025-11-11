@@ -23,7 +23,7 @@ app = Flask(__name__)
 SAMPLE_RATE = 48000
 DURATION = 4
 THRESHOLD = 0.5
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+device = torch.device('cpu')
 counts = 0
 logs = []  # Simple in-memory log for detections
 
