@@ -30,7 +30,7 @@ logs = []  # Simple in-memory log for detections
 
 
 net = AudioCNN(n_classes=1).to(device)  # Load your real model here, e.g., net.load_state_dict(torch.load('model.pth'))
-net.load_state_dict(torch.load("final_model/model.pt"))
+net.load_state_dict(torch.load("final_model/model.pt", map_location=torch.device('cpu')))
 
 def extract_features(audio, rate=SAMPLE_RATE):
     X = []
