@@ -6,6 +6,7 @@ scipy
 psutil
 librosa
 python-speech-features
+portaudio19-dev
 soundfile
 scikit-learn
 torch
