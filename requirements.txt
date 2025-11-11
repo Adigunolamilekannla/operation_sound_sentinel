@@ -4,7 +4,6 @@ pandas
 tqdm
 scipy
 psutil
-python-dotenv
 librosa
 python-speech-features
 soundfile
@@ -17,3 +16,5 @@ dataclasses
 pickle-mixin
 flask
 python-dotenv
+sounddevice
+scipy
