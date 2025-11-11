@@ -18,11 +18,6 @@ RUN apt-get update -y && apt-get install -y --no-install-recommends \
 # Runtime stage
 FROM python:3.10.14-slim-bullseye
 
-# Install runtime system dependencies (e.g., for sounddevice)
-RUN apt-get update -y && apt-get install -y --no-install-recommends \
-    libportaudio2 \
-    && rm -rf /var/lib/apt/lists/*
-
 # Set working directory
 WORKDIR /application
 
@@ -38,7 +33,7 @@ COPY . .
 
 # Pre-warm heavy imports to reduce cold start
 USER root
-RUN python -c "import pandas; import numpy; import sklearn; import flask; import torch; import sounddevice as sd" \
+RUN python -c "import pandas; import numpy; import sklearn; import flask; import torch" \
     && chown -R appuser:appuser /application
 USER appuser
 
