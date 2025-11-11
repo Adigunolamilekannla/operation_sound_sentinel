@@ -1,52 +1,67 @@
-# ---------------------------
-# Build Stage
-# ---------------------------
+# ============================
+# 1️⃣ BUILD STAGE
+# ============================
 FROM python:3.10.14-slim-bullseye AS builder
 
 # Set working directory
 WORKDIR /application
 
-# Copy requirements first (for Docker layer caching)
+# Copy only requirements first for layer caching
 COPY requirements.txt .
 
-# Install build dependencies (including PortAudio for sounddevice)
-RUN apt-get update -y && apt-get install -y --no-install-recommends \
-    build-essential gcc portaudio19-dev \
+# Install system-level dependencies (including PortAudio for sounddevice)
+RUN apt-get update -y \
+    && apt-get install -y --no-install-recommends \
+        build-essential \
+        gcc \
+        libportaudio2 \
+        libasound-dev \
+        ffmpeg \
     && pip install --no-cache-dir --upgrade pip \
     && pip install --no-cache-dir -r requirements.txt \
+    # Clean up to keep image small
     && apt-get purge -y --auto-remove build-essential gcc \
     && rm -rf /var/lib/apt/lists/*
 
-# ---------------------------
-# Runtime Stage
-# ---------------------------
+
+# ============================
+# 2️⃣ RUNTIME STAGE
+# ============================
 FROM python:3.10.14-slim-bullseye
 
 # Set working directory
 WORKDIR /application
 
-# Create non-root user
+# Create non-root user for security
 RUN groupadd -r appuser && useradd -r -g appuser appuser
 
-# Install only runtime dependencies (PortAudio library needed at runtime)
-RUN apt-get update -y && apt-get install -y --no-install-recommends \
-    portaudio19-dev \
+# Install only runtime audio dependencies (lighter than dev)
+RUN apt-get update -y \
+    && apt-get install -y --no-install-recommends \
+        libportaudio2 \
+        libasound2 \
+        ffmpeg \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy installed Python dependencies from builder
+# Copy installed Python packages from builder stage
 COPY --from=builder /usr/local/lib/python3.10/site-packages /usr/local/lib/python3.10/site-packages
 COPY --from=builder /usr/local/bin /usr/local/bin
 
+# Copy trained model (make sure it exists locally)
+COPY final_model/model.pt /final_model/model.pt
 
-# Preload heavy libraries (optional)
+# Copy application source code
+COPY . .
+
+# Optional: pre-warm large imports to reduce cold start on EC2
 USER root
-RUN python -c "import pandas; import numpy; import sklearn; import flask; import torch" \
+RUN python -c "import torch; import pandas; import numpy; import sklearn; import flask" \
     && chown -R appuser:appuser /application
-
 USER appuser
 
-# Expose Flask port
+# Expose Flask default port
 EXPOSE 5000
 
-# Run the app
+# Start your app
 CMD ["python", "application.py"]
+
